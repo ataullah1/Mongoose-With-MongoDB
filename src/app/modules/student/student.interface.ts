@@ -1,5 +1,3 @@
-import { Schema, model, connect } from 'mongoose';
-
 export type Gurdian = {
   name: string;
   phone: string;
