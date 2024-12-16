@@ -13,7 +13,6 @@ const studentSchema = new Schema<Student>({
     lastName: { type: String, required: true },
   },
   gender: ['male', 'female'],
-
   dateOfBirth: { type: String, required: true },
   email: { type: String, required: true },
   contactNo: { type: String, required: true },

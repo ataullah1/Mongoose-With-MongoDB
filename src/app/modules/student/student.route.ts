@@ -4,3 +4,5 @@ const router = express.Router();
 
 // Will call controller func
 router.post('/create-student', StudentControllers.createStudent);
+
+export const StudentRoutes = router;
