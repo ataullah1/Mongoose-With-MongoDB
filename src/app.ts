@@ -11,7 +11,7 @@ app.use(cors());
 app.use('/api/v1/student', StudentRoutes);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send('Server is running 🎋!');
 });
 
 export default app;
