@@ -3,13 +3,14 @@ export type Gurdian = {
   phone: string;
   occupation: string;
 };
+export type Name = {
+  firstName: string;
+  lastName: string;
+};
 
 export type Student = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-  };
+  name: Name;
   gender: 'male' | 'female';
   dateOfBirth: string;
   email: string;
