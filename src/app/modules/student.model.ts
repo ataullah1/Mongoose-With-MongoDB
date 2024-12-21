@@ -1,5 +1,12 @@
 import { model, Schema } from 'mongoose';
-import { Gurdian, Name, Student } from './student/student.interface';
+import bcrypt from 'bcrypt';
+import {
+  TGurdian,
+  Name,
+  TStudent,
+  StudentModel,
+} from './student/student.interface';
+import config from '../config';
 
 const nameSchema = new Schema<Name>({
   firstName: {
@@ -18,7 +25,7 @@ const nameSchema = new Schema<Name>({
   },
 });
 
-const gurdianSchema = new Schema<Gurdian>({
+const gurdianSchema = new Schema<TGurdian>({
   name: {
     type: String,
     required: [true, 'Guardian name is required, please provide a valid name.'],
@@ -39,11 +46,18 @@ const gurdianSchema = new Schema<Gurdian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: {
     type: String,
     required: [true, 'Student ID is required, please provide a unique ID.'],
     unique: true,
+  },
+  password: {
+    type: String,
+    required: [
+      true,
+      'Student password is required, please provide a password.',
+    ],
   },
   name: {
     type: nameSchema,
@@ -115,5 +129,43 @@ const studentSchema = new Schema<Student>({
   },
 });
 
+//  Pre save middleware/hook: Will work on create() save()
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'Pre hook: We will save the data');
+
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  // Hashing password and save into DB
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+//  Post save middleware/hook
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+
+  next();
+});
+
+// Query Middleware --------
+studentSchema.pre('find', function (next) {
+  this.find;
+});
+
+// Creating a custom Static method
+studentSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+
+// Creating a custom instence method
+// studentSchema.methods.isUserExists = async function (id: string) {
+//   const existingUser = await Student.findOne({ id });
+//   return existingUser;
+// };
+
 //  Create a Model.
-export const StudentModel = model<Student>('Student', studentSchema);
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);
