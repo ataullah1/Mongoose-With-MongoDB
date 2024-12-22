@@ -32,8 +32,12 @@ const getAllStudent = async (req: Request, res: Response) => {
       message: 'Students are read succesfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      error: error,
+    });
   }
 };
 const getSingleStudent = async (req: Request, res: Response) => {
@@ -45,8 +49,12 @@ const getSingleStudent = async (req: Request, res: Response) => {
       message: 'Single Student are read succesfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      error: error,
+    });
   }
 };
 
