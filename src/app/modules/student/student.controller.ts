@@ -15,10 +15,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student is created succesfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       success: false,
-      message: error.message || 'Something went wrong',
+      message: error instanceof Error ? error.message : 'Something went wrong',
       error: error,
     });
   }
@@ -32,10 +32,10 @@ const getAllStudent = async (req: Request, res: Response) => {
       message: 'Students are read succesfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       success: false,
-      message: error.message || 'Something went wrong',
+      message: error instanceof Error ? error.message : 'Something went wrong',
       error: error,
     });
   }
@@ -49,10 +49,10 @@ const getSingleStudent = async (req: Request, res: Response) => {
       message: 'Single Student are read succesfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       success: false,
-      message: error.message || 'Something went wrong',
+      message: error instanceof Error ? error.message : 'Something went wrong',
       error: error,
     });
   }

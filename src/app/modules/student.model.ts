@@ -152,7 +152,7 @@ studentSchema.post('save', function (doc, next) {
 
 // Query Middleware --------
 studentSchema.pre('find', function (next) {
-  this.find;
+  console.log(this);
 });
 
 // Creating a custom Static method
