@@ -156,7 +156,17 @@ studentSchema.post('save', function (doc, next) {
 
 // Query Middleware --------
 studentSchema.pre('find', function (next) {
-  // console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+studentSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+
+// if i use aggregate then i have to use this way
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
