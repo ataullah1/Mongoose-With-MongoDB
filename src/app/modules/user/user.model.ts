@@ -19,15 +19,11 @@ const userSchema = new Schema<Tuser>(
     role: {
       type: String,
       enum: ['admin', 'student', 'faculty'],
-      required: [true, 'User role is required, please provide a valid role.'],
     },
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
-      required: [
-        true,
-        'User status is required, please provide a valid status.',
-      ],
+      default: 'in-progress',
     },
     isDeleted: {
       type: Boolean,
