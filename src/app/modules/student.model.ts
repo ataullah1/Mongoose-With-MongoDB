@@ -46,91 +46,103 @@ const gurdianSchema = new Schema<TGurdian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel>({
-  id: {
-    type: String,
-    required: [true, 'Student ID is required, please provide a unique ID.'],
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [
-      true,
-      'Student password is required, please provide a password.',
-    ],
-  },
-  name: {
-    type: nameSchema,
-    required: [
-      true,
-      'Student name is required, please provide both first and last names.',
-    ],
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female', 'others'],
-      message: 'Gender must be one of "male", "female", or "others".',
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: {
+      type: String,
+      required: [true, 'Student ID is required, please provide a unique ID.'],
+      unique: true,
     },
-    required: [true, 'Gender is required, please provide a valid gender.'],
-  },
-  dateOfBirth: {
-    type: String,
-    required: [true, 'Date of birth is required, please provide a valid date.'],
-  },
-  email: {
-    type: String,
-    required: [
-      true,
-      'Email address is required, please provide a valid email.',
-    ],
-    unique: true,
-  },
-  contactNo: {
-    type: String,
-    required: [
-      true,
-      'Contact number is required, please provide a valid number.',
-    ],
-  },
-  bloodGroup: {
-    type: String,
-    enum: {
-      values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-      message:
-        'Blood group must be one of "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", or "O-".',
+    password: {
+      type: String,
+      required: [
+        true,
+        'Student password is required, please provide a password.',
+      ],
+    },
+    name: {
+      type: nameSchema,
+      required: [
+        true,
+        'Student name is required, please provide both first and last names.',
+      ],
+    },
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female', 'others'],
+        message: 'Gender must be one of "male", "female", or "others".',
+      },
+      required: [true, 'Gender is required, please provide a valid gender.'],
+    },
+    dateOfBirth: {
+      type: String,
+      required: [
+        true,
+        'Date of birth is required, please provide a valid date.',
+      ],
+    },
+    email: {
+      type: String,
+      required: [
+        true,
+        'Email address is required, please provide a valid email.',
+      ],
+      unique: true,
+    },
+    contactNo: {
+      type: String,
+      required: [
+        true,
+        'Contact number is required, please provide a valid number.',
+      ],
+    },
+    bloodGroup: {
+      type: String,
+      enum: {
+        values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        message:
+          'Blood group must be one of "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", or "O-".',
+      },
+    },
+    address: {
+      type: String,
+      required: [true, 'Address is required, please provide a valid address.'],
+    },
+    gurdian: {
+      type: gurdianSchema,
+      required: [
+        true,
+        'Guardian information is required, please provide valid details.',
+      ],
+    },
+    profileImg: {
+      type: String,
+      required: [
+        true,
+        'Profile image URL is required, please provide a valid URL.',
+      ],
+    },
+    isActive: {
+      type: String,
+      enum: {
+        values: ['active', 'inactive'],
+        message: 'Status must be either "active" or "inactive".',
+      },
+      default: 'active',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
-  address: {
-    type: String,
-    required: [true, 'Address is required, please provide a valid address.'],
+  {
+    toJSON: { virtuals: true },
   },
-  gurdian: {
-    type: gurdianSchema,
-    required: [
-      true,
-      'Guardian information is required, please provide valid details.',
-    ],
-  },
-  profileImg: {
-    type: String,
-    required: [
-      true,
-      'Profile image URL is required, please provide a valid URL.',
-    ],
-  },
-  isActive: {
-    type: String,
-    enum: {
-      values: ['active', 'inactive'],
-      message: 'Status must be either "active" or "inactive".',
-    },
-    default: 'active',
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+);
+// Virtuals
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.lastName}`;
 });
 
 //  Pre save middleware/hook: Will work on create() save()
