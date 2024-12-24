@@ -85,6 +85,7 @@ const studentValidationSchema = z.object({
     })
     .url('Invalid URL format.'),
   isActive: z.enum(['active', 'inactive']).optional().default('active'),
+  isDeleted: z.boolean().default(false),
 });
 
 // Exporting the Zod schema

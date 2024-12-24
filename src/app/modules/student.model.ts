@@ -127,6 +127,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     },
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 //  Pre save middleware/hook: Will work on create() save()
@@ -152,7 +156,8 @@ studentSchema.post('save', function (doc, next) {
 
 // Query Middleware --------
 studentSchema.pre('find', function (next) {
-  console.log(this);
+  // console.log(this);
+  next();
 });
 
 // Creating a custom Static method

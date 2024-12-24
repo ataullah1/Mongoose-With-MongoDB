@@ -23,6 +23,7 @@ export type TStudent = {
   gurdian: TGurdian;
   profileImg?: string;
   isActive: 'active' | 'inactive';
+  isDeleted: boolean;
 };
 
 // For creating static
