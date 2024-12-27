@@ -1,12 +1,10 @@
 import { model, Schema } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   TGurdian,
   Name,
   TStudent,
   StudentModel,
 } from './student/student.interface';
-import config from '../config';
 
 const nameSchema = new Schema<Name>({
   firstName: {
@@ -59,13 +57,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       unique: true,
       ref: 'User',
     },
-    password: {
-      type: String,
-      required: [
-        true,
-        'Student password is required, please provide a password.',
-      ],
-    },
+
     name: {
       type: nameSchema,
       required: [
@@ -144,27 +136,6 @@ studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.lastName}`;
 });
 
-//  Pre save middleware/hook: Will work on create() save()
-studentSchema.pre('save', async function (next) {
-  // console.log(this, 'Pre hook: We will save the data');
-
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  // Hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-//  Post save middleware/hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-
-  next();
-});
-
 // Query Middleware --------
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
@@ -186,12 +157,6 @@ studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
-
-// Creating a custom instence method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Student.findOne({ id });
-//   return existingUser;
-// };
 
 //  Create a Model.
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);

@@ -1,7 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentServices } from './student.service';
 
-const getAllStudent = async (req: Request, res: Response) => {
+const getAllStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentServices.getAllStudentsDB();
     res.status(200).json({
@@ -9,15 +13,15 @@ const getAllStudent = async (req: Request, res: Response) => {
       message: 'Students are read succesfully',
       data: result,
     });
-  } catch (error: unknown) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong',
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
-const getSingleStudent = async (req: Request, res: Response) => {
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await StudentServices.getSingleStudentsDB(studentId);
@@ -26,15 +30,15 @@ const getSingleStudent = async (req: Request, res: Response) => {
       message: 'Single Student are read succesfully',
       data: result,
     });
-  } catch (error: unknown) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong',
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
-const getDeleteStudent = async (req: Request, res: Response) => {
+const getDeleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await StudentServices.getDeleteStudentsDB(studentId);
@@ -43,12 +47,8 @@ const getDeleteStudent = async (req: Request, res: Response) => {
       message: 'Single Student are deleted succesfully',
       data: result,
     });
-  } catch (error: unknown) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong',
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 

@@ -1,5 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { Tuser } from './user.interfase';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
 const userSchema = new Schema<Tuser>(
   {
@@ -34,5 +36,24 @@ const userSchema = new Schema<Tuser>(
     timestamps: true,
   },
 );
+
+//  Pre save middleware/hook: Will work on create() save()
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  // Hashing password and save into DB
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+//  Set '' after saving password
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+
+  next();
+});
 
 export const User = model<Tuser>('User', userSchema);
