@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-// import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
@@ -17,6 +16,17 @@ const createAcademicSemester: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const getAllAcademicSemester: RequestHandler = catchAsync(async (req, res) => {
+  const result = await AcademicSemesterServices.getAllAcademicSemesterIntoDB();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Academic Semester is readed Succesfully',
+    data: result,
+  });
+});
+
 export const AcademicSemesterControllers = {
+  getAllAcademicSemester,
   createAcademicSemester,
 };
