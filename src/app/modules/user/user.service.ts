@@ -22,7 +22,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   );
 
   //  Set Manually genarated id
-  userData.id = genarateStudentId(admissionSemester);
+  userData.id = await genarateStudentId(admissionSemester);
 
   // create user
   const newUser = await User.create(userData);
