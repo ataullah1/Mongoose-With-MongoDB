@@ -45,7 +45,7 @@ export const createStudentValidationSchema = z.object({
           'Gender must be one of "male", "female", or "others".',
         required_error: 'Gender is required, please provide a valid gender.',
       }),
-      dateOfBirth: z.date({
+      dateOfBirth: z.string({
         required_error:
           'Date of birth is required, please provide a valid date.',
       }),
@@ -71,6 +71,7 @@ export const createStudentValidationSchema = z.object({
         })
         .nonempty('Address cannot be empty.'),
       gurdian: createGuardianValidationSchema,
+      admissionSemester: z.string(),
       profileImg: z
         .string({
           required_error:
