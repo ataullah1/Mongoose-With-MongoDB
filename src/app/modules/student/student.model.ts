@@ -1,10 +1,5 @@
 import { model, Schema } from 'mongoose';
-import {
-  TGurdian,
-  Name,
-  TStudent,
-  StudentModel,
-} from './student/student.interface';
+import { TGurdian, Name, TStudent, StudentModel } from './student.interface';
 
 const nameSchema = new Schema<Name>({
   firstName: {
@@ -124,6 +119,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     admissionSemester: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
     },
     isDeleted: {
       type: Boolean,

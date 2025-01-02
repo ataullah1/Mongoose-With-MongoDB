@@ -2,7 +2,7 @@ import { User } from './user.model';
 import { TStudent } from '../student/student.interface';
 import config from '../../config';
 import { Tuser } from './user.interfase';
-import { Student } from '../student.model';
+import { Student } from '../student/student.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { genarateStudentId } from './user.utils';
 
