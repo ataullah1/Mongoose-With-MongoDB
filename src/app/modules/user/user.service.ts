@@ -5,6 +5,8 @@ import { Tuser } from './user.interfase';
 import { Student } from '../student/student.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { genarateStudentId } from './user.utils';
+import mongoose from 'mongoose';
+import AppError from '../../errors/AppError';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //  create user object
@@ -21,23 +23,38 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  //  Set Manually genarated id
-  if (admissionSemester) {
-    userData.id = await genarateStudentId(admissionSemester);
-  } else {
-    throw new Error('Admission semester not found');
-  }
+  const session = await mongoose.startSession();
 
-  // create user
-  const newUser = await User.create(userData);
-  // Create a student
-  if (Object.keys(newUser).length) {
+  try {
+    session.startTransaction();
+    //  Set Manually genarated id
+    if (admissionSemester) {
+      userData.id = await genarateStudentId(admissionSemester);
+    } else {
+      throw new Error('Admission semester not found');
+    }
+
+    // create user
+    const newUser = await User.create([userData], { session });
+    // Create a student
+    if (!newUser.length) {
+      throw new AppError(500, 'Faild to create user');
+    }
     //  Set id, _id as user
-    payload.id = newUser.id; // Embaded id
-    payload.user = newUser._id; // Reference _id
+    payload.id = newUser[0].id; // Embaded id
+    payload.user = newUser[0]._id; // Reference _id
 
-    const newStudent = await Student.create(payload);
+    const newStudent = await Student.create([payload], { session });
+    if (!newStudent.length) {
+      throw new AppError(500, 'Faild to create student');
+    }
+    await session.commitTransaction();
+    await session.endSession();
     return newStudent;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(500, err.message);
   }
 };
 
