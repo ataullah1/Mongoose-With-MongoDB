@@ -82,7 +82,33 @@ export const createStudentValidationSchema = z.object({
   }),
 });
 
+export const updateStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().max(20).optional(),
+    student: z
+      .object({
+        name: createNameValidationSchema.optional(),
+        gender: z.enum(['male', 'female', 'others']).optional(),
+        dateOfBirth: z.string().optional(),
+        email: z.string().email('Invalid email format.').optional(),
+        contactNo: z
+          .string()
+          .nonempty('Contact number cannot be empty.')
+          .optional(),
+        bloodGroup: z
+          .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+          .optional(),
+        address: z.string().nonempty('Address cannot be empty.').optional(),
+        gurdian: createGuardianValidationSchema.optional(),
+        admissionSemester: z.string().optional(),
+        profileImg: z.string().url('Invalid URL format.').optional(),
+      })
+      .optional(),
+  }),
+});
+
 // Exporting the Zod schema
 export const studentValidations = {
   createStudentValidationSchema,
+  updateStudentValidationSchema,
 };
