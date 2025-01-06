@@ -25,6 +25,7 @@ const getSingleStudent = catchAsync(async (req, res) => {
 const updateStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const { student } = req.body;
+  console.log('Hello>>>>>>>> ', student);
   const result = await StudentServices.updateStudentsDB(studentId, student);
   sendResponse(res, {
     success: true,

@@ -82,12 +82,27 @@ export const createStudentValidationSchema = z.object({
   }),
 });
 
+const updateNameValidationSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+const updateGuardianValidationSchema = z.object({
+  name: z.string().nonempty('Guardian name cannot be empty.').optional(),
+  phone: z
+    .string()
+    .nonempty('Guardian phone number cannot be empty.')
+    .optional(),
+  occupation: z
+    .string()
+    .nonempty('Guardian occupation cannot be empty.')
+    .optional(),
+});
 export const updateStudentValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20).optional(),
     student: z
       .object({
-        name: createNameValidationSchema.optional(),
+        name: updateNameValidationSchema.optional(),
         gender: z.enum(['male', 'female', 'others']).optional(),
         dateOfBirth: z.string().optional(),
         email: z.string().email('Invalid email format.').optional(),
@@ -99,7 +114,7 @@ export const updateStudentValidationSchema = z.object({
           .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
           .optional(),
         address: z.string().nonempty('Address cannot be empty.').optional(),
-        gurdian: createGuardianValidationSchema.optional(),
+        gurdian: updateGuardianValidationSchema.optional(),
         admissionSemester: z.string().optional(),
         profileImg: z.string().url('Invalid URL format.').optional(),
       })

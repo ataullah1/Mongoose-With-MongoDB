@@ -23,7 +23,25 @@ const getSingleStudentsDB = async (id: string) => {
   return result;
 };
 const updateStudentsDB = async (id: string, payload: Partial<TStudent>) => {
-  const result = await Student.findOneAndUpdate({ id }, payload);
+  const { name, gurdian, ...remainingStudentData } = payload;
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+  if (gurdian && Object.keys(gurdian).length) {
+    for (const [key, value] of Object.entries(gurdian)) {
+      modifiedUpdatedData[`gurdian.${key}`] = value;
+    }
+  }
+  // console.log('ModifiedDta>>>', modifiedUpdatedData);
+  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 const getDeleteStudentsDB = async (id: string) => {
